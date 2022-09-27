@@ -15,7 +15,7 @@ import Radio from "@mui/material/Radio";
  * @constructor
  */
 export default function FolderCard(props) {
-  const pics = [1,2,3,4,5,6,7,8,9]
+  const pics = [1, 2, 3, 4, 5, 6, 7, 8, 9]
   const [open, setOpen] = React.useState(false);
   /**
    * 传入文件夹的名字，得到文件夹下面图片的路径
@@ -30,17 +30,27 @@ export default function FolderCard(props) {
   const handleChange = (event) => {
     setLabel(event.target.value);
   };
-  return(<Paper elevation={1}>
+
+  const getLabel = function (label) {
+    switch (label){
+      case 'label1':
+        return('success');
+      case 'label2':
+        return('primary');
+      case 'label3':
+        return('info');
+      default:
+        return('error')
+    }
+  }
+  return (<Paper elevation={1}>
     <center>
       <img src={folderSvg} height={'150px'}/>
     </center>
     <Typography variant="h6" component="div" color="text.secondary">
       <center>
-        {props.name} <Chip label={label?label:"label it"} color={label?"success":"warning"} onClick={()=>{
-        if(!label){
-          handleOpen(props.name)
-        }
-      }}/>
+        {/*<Chip color={''}*/}
+        {props.name} <Chip label={label ? label : "label it"} color={getLabel(label)} onClick={() => {handleOpen(props.name)}}/>
       </center>
     </Typography>
     <Dialog
@@ -66,8 +76,8 @@ export default function FolderCard(props) {
               },
             }}
         >
-          {pics.map((pic)=>{
-            return(
+          {pics.map((pic) => {
+            return (
                 <Paper key={pic}>
                   <img src={'/robot.svg'}/>
                 </Paper>)
@@ -83,9 +93,9 @@ export default function FolderCard(props) {
               value={label}
               onChange={handleChange}
           >
-            <FormControlLabel value="label1" control={<Radio />} label="label1" />
-            <FormControlLabel value="label2" control={<Radio />} label="label2" />
-            <FormControlLabel value="label3" control={<Radio />} label="label3" />
+            <FormControlLabel value="label1" control={<Radio/>} label="label1"/>
+            <FormControlLabel value="label2" control={<Radio/>} label="label2"/>
+            <FormControlLabel value="label3" control={<Radio/>} label="label3"/>
           </RadioGroup>
         </FormControl>
         {/*{value}*/}
