@@ -24,7 +24,9 @@ export default function ajax(url, data = {}, type = 'GET') {
     }
     promise.then(function (response) {
       //成功了调用resolve()
+      // console.log(response.data)
       resolve(response.data)
+
     }).catch(function (error) {
       //失败了调用reject()
       reject(error)

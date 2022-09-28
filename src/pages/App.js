@@ -1,19 +1,16 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
-import {HashRouter, Link, Route, useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import CircularProgress, {
-  circularProgressClasses,
-} from '@mui/material/CircularProgress';
+import CircularProgress from '@mui/material/CircularProgress';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import io from "socket.io-client";
 
 //导入机器人动图
-import robotGif from './assets/robot.gif';
-import Labeling from "./pages/Labeling";
+import robotGif from '../assets/robot.gif';
 
 
 const darkTheme = createTheme({
@@ -33,6 +30,7 @@ const greenTheme = createTheme({
   },
 });
 function CircularProgressWithLabel(props) {
+
   return (
       <Box sx={{ position: 'relative', display: 'inline-flex' }}>
 
@@ -67,30 +65,22 @@ CircularProgressWithLabel.propTypes = {
 };
 
 function App(props) {
+  const socket = io.connect("http://localhost:5000");
   const navigate = useNavigate();
-  const [progress, setProgress] = React.useState(80);
-  setTimeout(()=>{
-    navigate('/label')
-  },1600)
+  const [progress, setProgress] = React.useState(0);
   React.useEffect(() => {
-    console.log('classComponent：componentDidMount')
-    const timer = setInterval(() => {
-        setProgress((prevProgress) => (prevProgress >= 100 ? 0 : prevProgress + 10));
-    }, 800);
-    return () => {
-      console.log("调用了这个清除器")
-      console.log(progress)
-      clearInterval(timer);
-    };
-  }, []);
+    socket.on("data_collecting",(data)=>{
+      console.log(data.progress)
+      setProgress((prevState => data.progress));
+      if(data.progress>=100){
+        console.log(data.progress)
+        navigate('/label');
+      }
+    });
+  }, [socket]);
 
   return (
       <Box sx={{ flexGrow: 1 }}>
-        <div id={'label'} style={{display:'none'}} onClick={()=>{console.log("ok")}}>
-          <Link to={'/label'}/>
-        </div>
-        {/*<Link to={'/label'} style={{display:'none'}}*/}
-        {/*<a id={'label'} style="display: none" href='/label'/>*/}
         <ThemeProvider theme={darkTheme}>
           <AppBar position="static">
             <Toolbar>
@@ -100,10 +90,9 @@ function App(props) {
             </Toolbar>
           </AppBar>
         </ThemeProvider>
-
         <div>
           <center>
-            <img src={robotGif} alt={"机器人"} height={'300'} style={{marginTop:'30px'}}/>
+            <img src={robotGif} alt={"机器人"} height={'400'} style={{marginTop:'30px'}}/>
           </center>
           <center>
             <Typography variant="h6" component="div" color="text.secondary" marginBottom={'50px'}>
@@ -112,10 +101,8 @@ function App(props) {
             <ThemeProvider theme={greenTheme}>
               <CircularProgressWithLabel value={progress}/>
             </ThemeProvider>
-
           </center>
         </div>
-
       </Box>
   );
 }

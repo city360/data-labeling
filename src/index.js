@@ -1,15 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
+import App from './pages/App';
 // import ChooseFolder from "./pages/ChooseFolder";
-import reportWebVitals from './reportWebVitals';
 import {
   createBrowserRouter,
   RouterProvider,
   Route,
 } from "react-router-dom";
-import Labeling from "./pages/Labeling";
-
+import Folders from "./pages/Folders";
 
 
 const router = createBrowserRouter([
@@ -19,18 +17,13 @@ const router = createBrowserRouter([
   },
   {
     path: "/label",
-    element: <Labeling/>,
+    element: <Folders/>,
   }
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
+    <React.StrictMode>
+      <RouterProvider router={router}/>
+    </React.StrictMode>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
